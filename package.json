@@ -5,11 +5,12 @@
   "main": "dist/redux-api-middleware-native.js",
   "scripts": {
     "test": "jest",
-    "build": "webpack"
+    "build": "webpack",
+    "prepublish": "jest && webpack"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/celso-henrique/redux-native-api-middleware.git"
+    "url": "git+https://github.com/celso-henrique/redux-api-middleware-native.git"
   },
   "keywords": [
     "React",
@@ -20,9 +21,9 @@
   "author": "“Celso <“celso.henrique@hotmail.com.br”>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/celso-henrique/redux-native-api-middleware/issues"
+    "url": "https://github.com/celso-henrique/redux-api-middleware-native/issues"
   },
-  "homepage": "https://github.com/celso-henrique/redux-native-api-middleware#readme",
+  "homepage": "https://github.com/celso-henrique/redux-api-middleware-native#readme",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",

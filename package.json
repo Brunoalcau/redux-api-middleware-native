@@ -4,10 +4,9 @@
   "description": "Api middleware for React Native.",
   "main": "dist/redux-api-middleware-native.js",
   "scripts": {
-    "test": "jest",
+    "test": "node_modules/.bin/jest --coverage",
     "build": "webpack",
-    "cover": "jest --coverage",
-    "prepublish": "jest && webpack"
+    "prepublishOnly": "node_modules/.bin/jest --coverage && webpack"
   },
   "repository": {
     "type": "git",

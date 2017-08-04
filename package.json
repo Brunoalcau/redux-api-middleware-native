@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "webpack",
+    "cover": "jest --coverage",
     "prepublish": "jest && webpack"
   },
   "repository": {
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/celso-henrique/redux-api-middleware-native#readme",
   "devDependencies": {
+    "ajv": "^5.2.2",
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
     "babel-jest": "^20.0.3",
@@ -38,5 +40,6 @@
     "jest": "^20.0.4",
     "webpack": "^3.4.1",
     "whatwg-fetch": "^2.0.3"
-  }
+  },
+  "dependencies": {}
 }

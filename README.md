@@ -1,4 +1,4 @@
-redux-api-middleware-native
+Redux api middleware native
 ====================
 Redux api middleware for redux compatible with native and web apps.
 

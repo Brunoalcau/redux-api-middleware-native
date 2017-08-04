@@ -1,7 +1,5 @@
 redux-api-middleware-native
 ====================
-
-# Info
 Redux api middleware for redux compatible with native and web apps.
 
 # Install

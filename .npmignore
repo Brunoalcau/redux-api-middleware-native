@@ -1,2 +1,7 @@
-/src/
-/test/
+src/
+test/
+coverage/
+.babelrc
+.eslintrc
+.DS_Store
+.gitignore

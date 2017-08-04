@@ -68,6 +68,7 @@ Action {
     type = action.success
     payload = JSON parsed response
     error = false
+    meta = any data that you sent
 }
 ```
 

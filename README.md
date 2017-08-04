@@ -34,25 +34,25 @@ import { API_REQUEST } from 'redux-api-middleware-native';
 
 function action() {
     return {
-            [API_REQUEST]: {
-                url: 'http://www.example.com/resource',
-                method: "POST",
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: {
-                    'username' : 'npm-user',
-                    'password' : 'test'
-                },
-                action: {
-                        success: "SUCCESS",
-                        failure: "FAILURE",
-                        error: "ERROR"
-                },
-                meta: {
-                  id: 'to reducer'
-                }
-            }
+        [API_REQUEST]: {
+            url: 'http://www.example.com/resource',
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: {
+                'username' : 'npm-user',
+                'password' : 'test'
+            },
+            action: {
+                success: "SUCCESS",
+                failure: "FAILURE",
+                error: "ERROR"
+            },
+            meta: {
+                id: 'to reducer'
+            }
+        }
     }
 }
 ```

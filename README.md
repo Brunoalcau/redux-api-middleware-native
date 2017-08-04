@@ -27,7 +27,7 @@ const store = createStore(reducer, initialState, applyMiddleware(
 ```
 
 
-# Example
+# Examples
 
 ```js
 import { API_REQUEST } from 'redux-api-middleware-native';
@@ -56,8 +56,7 @@ function action() {
     }
 }
 ```
-
-# Action Types
+# Default responses
 
 ## SUCCESS
 

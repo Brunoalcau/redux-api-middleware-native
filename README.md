@@ -2,14 +2,14 @@ Redux api middleware native
 ====================
 Redux api middleware for redux compatible with native and web apps.
 
+
 # Install
 ```
 npm install --save redux-api-middleware-native
 ```
 
-# Adding middleware to redux store
 
-store
+# Adding middleware to redux store
 ```js
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import apiMiddleware from 'redux-api-middleware-native';
@@ -23,26 +23,9 @@ const store = createStore(reducer, initialState, applyMiddleware(
 ));
 ```
 
-# Examples
 
-Simple Action
-```js
-import { API_REQUEST } from 'redux-api-middleware-native';
+# Example
 
-function action() {
-    return {
-            [API_REQUEST]: {
-                url: 'http://www.example.com/resource',
-                method: "GET",
-                headers: {
-                  'Content-Type': 'application/json'
-                }
-            }
-    }
-}
-```
-
-Full Action
 ```js
 import { API_REQUEST } from 'redux-api-middleware-native';
 

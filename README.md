@@ -33,21 +33,21 @@ import { CALL_API } from 'redux-api-middleware-native';
 
 function action() {
     return {
-            [CALL_API]: {
-                endpoint: 'http://www.example.com/resource',
-                method: "POST",
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: {
-                    'username' : 'npm-user',
-                    'password' : 'test'
-                },
-                types: ['SUCCESS', 'FAILURE', 'ERROR'],
-                meta: {
-                    id: 'Data to reducer'
-                }
+        [CALL_API]: {
+            endpoint: 'http://www.example.com/resource',
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: {
+                'username' : 'npm-user',
+                'password' : 'test'
+            },
+            types: ['SUCCESS', 'FAILURE', 'ERROR'],
+            meta: {
+                id: 'Data to reducer'
             }
+        }
     }
 }
 ```
@@ -59,37 +59,36 @@ import { CALL_API } from 'redux-api-middleware-native';
 
 function action() {
     return {
-            [CALL_API]: {
-                endpoint: 'http://www.example.com/resource',
-                method: "POST",
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: {
-                    'username' : 'npm-user',
-                    'password' : 'test'
-                },
-                types: [{
-                  type: 'SUCCESS',
-                  payload: (action, state, res) => {
-                    return res.json().then((json) => {
-                      json.token = res.headers.get('Authorization'); // Inserting a header in response
-                      return json;
-                    });
-                  },
-                  meta: (action, state, res) => {
-                    return action.meta;
-                  }
-                }, 'FAILURE', 'ERROR'],
-                meta: {
-                    id: 'Data to reducer'
-                }
+        [CALL_API]: {
+            endpoint: 'http://www.example.com/resource',
+            method: "POST",
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: {
+                'username' : 'npm-user',
+                'password' : 'test'
+            },
+            types: [{
+              type: 'SUCCESS',
+              payload: (action, state, res) => {
+                return res.json().then((json) => {
+                  json.token = res.headers.get('Authorization'); // Inserting a header in response
+                  return json;
+                });
+              },
+              meta: (action, state, res) => {
+                return action.meta;
+              }
+            }, 'FAILURE', 'ERROR'],
+            meta: {
+                id: 'Data to reducer'
             }
+        }
     }
 }
 ```
-
-# Action Types
+# Responses
 
 ## SUCCESS
 ```js
@@ -97,6 +96,7 @@ Action {
     type = types[0]
     payload = JSON parsed response
     error = false
+    meta = Any data that you sent
 }
 ```
 
@@ -108,6 +108,7 @@ Action {
     type = types[1]
     payload = JSON parsed response
     error = true
+    meta = Any data that you sent
 }
 ```
 
@@ -119,5 +120,6 @@ Action {
     type = types[2]
     payload = ERROR object
     error = true
+    meta = Any data that you sent
 }
 ```

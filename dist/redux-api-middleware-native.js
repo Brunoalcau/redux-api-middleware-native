@@ -155,7 +155,7 @@ var actionCallback = function () {
             }
 
             _context.next = 17;
-            return meta(request, state, res);
+            return meta(request, state);
 
           case 17:
             meta = _context.sent;
@@ -175,21 +175,29 @@ var actionCallback = function () {
               meta: meta,
               error: error
             };
-            _context.next = 25;
+            _context.next = 31;
             break;
 
           case 24:
-            processedAction = {
-              payload: res,
-              type: actionType,
-              meta: request.meta,
-              error: error
-            };
-
-          case 25:
-            return _context.abrupt('return', processedAction);
+            _context.next = 26;
+            return res.json();
 
           case 26:
+            _context.t0 = _context.sent;
+            _context.t1 = actionType;
+            _context.t2 = request.meta;
+            _context.t3 = error;
+            processedAction = {
+              payload: _context.t0,
+              type: _context.t1,
+              meta: _context.t2,
+              error: _context.t3
+            };
+
+          case 31:
+            return _context.abrupt('return', processedAction);
+
+          case 32:
           case 'end':
             return _context.stop();
         }

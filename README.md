@@ -73,11 +73,12 @@ function action() {
               type: 'SUCCESS',
               payload: (action, state, res) => {
                   return res.json().then((json) => {
-                      json.token = res.headers.get('Authorization'); // Inserting a header in response
+                      // Inserting a header in response
+                      json.token = res.headers.get('Authorization');
                       return json;
                   });
               },
-              meta: (action, state, res) => {
+              meta: (action, state) => {
                   return action.meta;
               }
             }, 'FAILURE', 'ERROR'],

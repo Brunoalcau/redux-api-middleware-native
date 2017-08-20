@@ -5,3 +5,4 @@ coverage/
 .eslintrc
 .DS_Store
 .gitignore
+webpack.config.js

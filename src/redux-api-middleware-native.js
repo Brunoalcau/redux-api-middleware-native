@@ -8,23 +8,23 @@ const isValidRequest = (action) => {
     && action.hasOwnProperty(CALL_API);
 };
 
-const actionCallback = async (actionType, request, state, res, data, error) => {
+const actionCallback = async (actionType, request, state, res, error) => {
   let processedAction = {};
 
   if (typeof actionType === 'object') {
-    let { payload, type, meta } = type;
+    let { payload, type, meta } = actionType;
 
     if (payload) {
       if (typeof payload === 'function') {
         payload = await payload(request, state, res);
       }
     } else {
-      payload = data;
+      payload = await res.json();
     }
 
     if (meta) {
       if (typeof meta === 'function') {
-        meta = await meta(request, state, res);
+        meta =  await meta(request, state, res);
       }
     } else {
       meta = request.meta;
@@ -38,11 +38,11 @@ const actionCallback = async (actionType, request, state, res, data, error) => {
     };
   } else {
     processedAction = {
-      payload: data,
+      payload: res,
       type: actionType,
       meta: request.meta,
       error
-    }
+    };
   }
 
   return processedAction;
@@ -65,20 +65,18 @@ export const apiMiddleware = store => next => async (action) => {
       body: body ? JSON.stringify(body) : undefined
     });
 
-    const data = await res.json();
-
     if (res.status !== 200) {
       return next(
-        await actionCallback(failureType, request, state, res, data, true)
+        await actionCallback(failureType, request, state, res, true)
       );
     }
 
     return next(
-      await actionCallback(successType, request, state, res, data, false)
+      await actionCallback(successType, request, state, res, false)
     );
   } catch (event) {
     return next(
-      await actionCallback(errorType, request, state, event, event, true)
+      await actionCallback(errorType, request, state, event, true)
     );
   }
 };

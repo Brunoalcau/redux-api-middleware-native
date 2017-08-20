@@ -101,7 +101,7 @@ var isValidRequest = function isValidRequest(action) {
 };
 
 var actionCallback = function () {
-  var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(actionType, request, state, res, data, error) {
+  var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(actionType, request, state, res, error) {
     var processedAction, payload, type, meta;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
@@ -110,11 +110,11 @@ var actionCallback = function () {
             processedAction = {};
 
             if (!((typeof actionType === 'undefined' ? 'undefined' : _typeof(actionType)) === 'object')) {
-              _context.next = 22;
+              _context.next = 24;
               break;
             }
 
-            payload = type.payload, type = type.type, meta = type.meta;
+            payload = actionType.payload, type = actionType.type, meta = actionType.meta;
 
             if (!payload) {
               _context.next = 10;
@@ -133,37 +133,41 @@ var actionCallback = function () {
             payload = _context.sent;
 
           case 8:
-            _context.next = 11;
+            _context.next = 13;
             break;
 
           case 10:
-            payload = data;
+            _context.next = 12;
+            return res.json();
 
-          case 11:
+          case 12:
+            payload = _context.sent;
+
+          case 13:
             if (!meta) {
-              _context.next = 18;
+              _context.next = 20;
               break;
             }
 
             if (!(typeof meta === 'function')) {
-              _context.next = 16;
+              _context.next = 18;
               break;
             }
 
-            _context.next = 15;
+            _context.next = 17;
             return meta(request, state, res);
 
-          case 15:
+          case 17:
             meta = _context.sent;
 
-          case 16:
-            _context.next = 19;
+          case 18:
+            _context.next = 21;
             break;
 
-          case 18:
+          case 20:
             meta = request.meta;
 
-          case 19:
+          case 21:
 
             processedAction = {
               payload: payload,
@@ -171,21 +175,21 @@ var actionCallback = function () {
               meta: meta,
               error: error
             };
-            _context.next = 23;
+            _context.next = 25;
             break;
 
-          case 22:
+          case 24:
             processedAction = {
-              payload: data,
+              payload: res,
               type: actionType,
               meta: request.meta,
               error: error
             };
 
-          case 23:
+          case 25:
             return _context.abrupt('return', processedAction);
 
-          case 24:
+          case 26:
           case 'end':
             return _context.stop();
         }
@@ -193,7 +197,7 @@ var actionCallback = function () {
     }, _callee, undefined);
   }));
 
-  return function actionCallback(_x, _x2, _x3, _x4, _x5, _x6) {
+  return function actionCallback(_x, _x2, _x3, _x4, _x5) {
     return _ref.apply(this, arguments);
   };
 }();
@@ -202,7 +206,7 @@ var apiMiddleware = exports.apiMiddleware = function apiMiddleware(store) {
   return function (next) {
     return function () {
       var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(action) {
-        var request, state, method, headers, body, types, endpoint, meta, _ref3, _ref4, successType, failureType, errorType, res, data;
+        var request, state, method, headers, body, types, endpoint, meta, _ref3, _ref4, successType, failureType, errorType, res;
 
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
@@ -230,54 +234,49 @@ var apiMiddleware = exports.apiMiddleware = function apiMiddleware(store) {
 
               case 9:
                 res = _context2.sent;
-                _context2.next = 12;
-                return res.json();
-
-              case 12:
-                data = _context2.sent;
 
                 if (!(res.status !== 200)) {
-                  _context2.next = 19;
+                  _context2.next = 16;
                   break;
                 }
 
                 _context2.t0 = next;
-                _context2.next = 17;
-                return actionCallback(failureType, request, state, res, data, true);
+                _context2.next = 14;
+                return actionCallback(failureType, request, state, res, true);
 
-              case 17:
+              case 14:
                 _context2.t1 = _context2.sent;
                 return _context2.abrupt('return', (0, _context2.t0)(_context2.t1));
 
-              case 19:
+              case 16:
                 _context2.t2 = next;
-                _context2.next = 22;
-                return actionCallback(successType, request, state, res, data, false);
+                _context2.next = 19;
+                return actionCallback(successType, request, state, res, false);
 
-              case 22:
+              case 19:
                 _context2.t3 = _context2.sent;
                 return _context2.abrupt('return', (0, _context2.t2)(_context2.t3));
 
-              case 26:
-                _context2.prev = 26;
+              case 23:
+                _context2.prev = 23;
                 _context2.t4 = _context2['catch'](6);
                 _context2.t5 = next;
-                _context2.next = 31;
-                return actionCallback(errorType, request, state, _context2.t4, _context2.t4, true);
+                _context2.next = 28;
+                return actionCallback(errorType, request, state, _context2.t4, true);
 
-              case 31:
+              case 28:
                 _context2.t6 = _context2.sent;
                 return _context2.abrupt('return', (0, _context2.t5)(_context2.t6));
 
-              case 33:
+              case 30:
               case 'end':
                 return _context2.stop();
             }
           }
-        }, _callee2, undefined, [[6, 26]]);
+        }, _callee2, undefined, [[6, 23]]);
       }));
 
-      return function (_x7) {
+      return function (_x6) {
         return _ref2.apply(this, arguments);
       };
     }();

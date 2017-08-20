@@ -52,7 +52,7 @@ function action() {
 }
 ```
 
-# Custom payload / meta parser 
+# Custom payload / meta handler
 
 ```js
 import { CALL_API } from 'redux-api-middleware-native';

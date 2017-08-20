@@ -37,7 +37,7 @@ function action() {
             endpoint: 'http://www.example.com/resource',
             method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: {
                 'username' : 'npm-user',
@@ -63,7 +63,7 @@ function action() {
             endpoint: 'http://www.example.com/resource',
             method: "POST",
             headers: {
-              'Content-Type': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: {
                 'username' : 'npm-user',
@@ -72,13 +72,13 @@ function action() {
             types: [{
               type: 'SUCCESS',
               payload: (action, state, res) => {
-                return res.json().then((json) => {
-                  json.token = res.headers.get('Authorization'); // Inserting a header in response
-                  return json;
-                });
+                  return res.json().then((json) => {
+                      json.token = res.headers.get('Authorization'); // Inserting a header in response
+                      return json;
+                  });
               },
               meta: (action, state, res) => {
-                return action.meta;
+                  return action.meta;
               }
             }, 'FAILURE', 'ERROR'],
             meta: {

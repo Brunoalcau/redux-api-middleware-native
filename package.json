@@ -1,6 +1,6 @@
 {
   "name": "redux-api-middleware-native",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Api middleware for React Native.",
   "main": "dist/redux-api-middleware-native.js",
   "scripts": {

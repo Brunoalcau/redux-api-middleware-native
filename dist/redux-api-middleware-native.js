@@ -83,7 +83,9 @@ return /******/ (function(modules) { // webpackBootstrap
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.apiMiddleware = exports.TYPE = exports.API_REQUEST = undefined;
+exports.apiMiddleware = exports.CALL_API = undefined;
+
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -91,93 +93,192 @@ __webpack_require__(1);
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-var API_REQUEST = exports.API_REQUEST = 'API_REQUEST';
-var TYPE = exports.TYPE = {
-  success: "SUCCESS",
-  failure: "FAILURE",
-  error: "ERROR"
-};
+var CALL_API = exports.CALL_API = 'API_REQUEST';
+var TYPES = ['API_SUCCESS', 'API_FAILURE', 'API_ERROR'];
 
 var isValidRequest = function isValidRequest(action) {
-  return (typeof action === 'undefined' ? 'undefined' : _typeof(action)) === 'object' && action.hasOwnProperty(API_REQUEST);
+  return (typeof action === 'undefined' ? 'undefined' : _typeof(action)) === 'object' && action.hasOwnProperty(CALL_API);
 };
 
-var isValidResponse = function isValidResponse(status) {
-  return status === 200;
-};
+var actionCallback = function () {
+  var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(actionType, request, state, res, data, error) {
+    var processedAction, payload, type, meta;
+    return regeneratorRuntime.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            processedAction = {};
+
+            if (!((typeof actionType === 'undefined' ? 'undefined' : _typeof(actionType)) === 'object')) {
+              _context.next = 22;
+              break;
+            }
+
+            payload = type.payload, type = type.type, meta = type.meta;
+
+            if (!payload) {
+              _context.next = 10;
+              break;
+            }
+
+            if (!(typeof payload === 'function')) {
+              _context.next = 8;
+              break;
+            }
+
+            _context.next = 7;
+            return payload(request, state, res);
+
+          case 7:
+            payload = _context.sent;
+
+          case 8:
+            _context.next = 11;
+            break;
+
+          case 10:
+            payload = data;
+
+          case 11:
+            if (!meta) {
+              _context.next = 18;
+              break;
+            }
+
+            if (!(typeof meta === 'function')) {
+              _context.next = 16;
+              break;
+            }
+
+            _context.next = 15;
+            return meta(request, state, res);
+
+          case 15:
+            meta = _context.sent;
+
+          case 16:
+            _context.next = 19;
+            break;
+
+          case 18:
+            meta = request.meta;
+
+          case 19:
+
+            processedAction = {
+              payload: payload,
+              type: type,
+              meta: meta,
+              error: error
+            };
+            _context.next = 23;
+            break;
+
+          case 22:
+            processedAction = {
+              payload: data,
+              type: actionType,
+              meta: request.meta,
+              error: error
+            };
+
+          case 23:
+            return _context.abrupt('return', processedAction);
+
+          case 24:
+          case 'end':
+            return _context.stop();
+        }
+      }
+    }, _callee, undefined);
+  }));
+
+  return function actionCallback(_x, _x2, _x3, _x4, _x5, _x6) {
+    return _ref.apply(this, arguments);
+  };
+}();
 
 var apiMiddleware = exports.apiMiddleware = function apiMiddleware(store) {
   return function (next) {
     return function () {
-      var _ref = _asyncToGenerator(regeneratorRuntime.mark(function _callee(action) {
-        var request, response, data;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee2(action) {
+        var request, state, method, headers, body, types, endpoint, meta, _ref3, _ref4, successType, failureType, errorType, res, data;
+
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
                 if (isValidRequest(action)) {
-                  _context.next = 2;
+                  _context2.next = 2;
                   break;
                 }
 
-                return _context.abrupt('return', next(action));
+                return _context2.abrupt('return', next(action));
 
               case 2:
-                request = action[API_REQUEST];
-                _context.prev = 3;
-                _context.next = 6;
-                return fetch(request.url, {
-                  method: request.method ? request.method : "GET",
-                  headers: request.header ? request.header : {},
-                  body: request.body ? JSON.stringify(request.body) : undefined
+                request = action[CALL_API];
+                state = store.getState();
+                method = request.method, headers = request.headers, body = request.body, types = request.types, endpoint = request.endpoint, meta = request.meta;
+                _ref3 = types || TYPES, _ref4 = _slicedToArray(_ref3, 3), successType = _ref4[0], failureType = _ref4[1], errorType = _ref4[2];
+                _context2.prev = 6;
+                _context2.next = 9;
+                return fetch(endpoint, {
+                  method: method || 'GET',
+                  headers: headers || {},
+                  body: body ? JSON.stringify(body) : undefined
                 });
 
-              case 6:
-                response = _context.sent;
-                _context.next = 9;
-                return response.json();
-
               case 9:
-                data = _context.sent;
+                res = _context2.sent;
+                _context2.next = 12;
+                return res.json();
 
-                if (isValidResponse(response.status)) {
-                  _context.next = 12;
+              case 12:
+                data = _context2.sent;
+
+                if (!(res.status !== 200)) {
+                  _context2.next = 19;
                   break;
                 }
 
-                return _context.abrupt('return', next({
-                  type: request.action && request.action.failure ? request.action.failure : TYPE.failure,
-                  payload: data,
-                  error: true
-                }));
+                _context2.t0 = next;
+                _context2.next = 17;
+                return actionCallback(failureType, request, state, res, data, true);
 
-              case 12:
-                return _context.abrupt('return', next({
-                  type: request.action && request.action.success ? request.action.success : TYPE.success,
-                  payload: data,
-                  meta: request.meta,
-                  error: false
-                }));
+              case 17:
+                _context2.t1 = _context2.sent;
+                return _context2.abrupt('return', (0, _context2.t0)(_context2.t1));
 
-              case 15:
-                _context.prev = 15;
-                _context.t0 = _context['catch'](3);
-                return _context.abrupt('return', next({
-                  type: request.action && request.action.error ? request.action.error : TYPE.error,
-                  payload: _context.t0,
-                  error: true
-                }));
+              case 19:
+                _context2.t2 = next;
+                _context2.next = 22;
+                return actionCallback(successType, request, state, res, data, false);
 
-              case 18:
+              case 22:
+                _context2.t3 = _context2.sent;
+                return _context2.abrupt('return', (0, _context2.t2)(_context2.t3));
+
+              case 26:
+                _context2.prev = 26;
+                _context2.t4 = _context2['catch'](6);
+                _context2.t5 = next;
+                _context2.next = 31;
+                return actionCallback(errorType, request, state, _context2.t4, _context2.t4, true);
+
+              case 31:
+                _context2.t6 = _context2.sent;
+                return _context2.abrupt('return', (0, _context2.t5)(_context2.t6));
+
+              case 33:
               case 'end':
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, undefined, [[3, 15]]);
+        }, _callee2, undefined, [[6, 26]]);
       }));
 
-      return function (_x) {
-        return _ref.apply(this, arguments);
+      return function (_x7) {
+        return _ref2.apply(this, arguments);
       };
     }();
   };

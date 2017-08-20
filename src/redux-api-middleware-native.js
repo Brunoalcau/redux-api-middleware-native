@@ -1,18 +1,51 @@
 import 'whatwg-fetch';
 
-export const API_REQUEST = 'API_REQUEST';
-export const TYPE = {
-  success: "SUCCESS",
-  failure: "FAILURE",
-  error: "ERROR"
-};
+export const CALL_API = 'API_REQUEST';
+const TYPES = ['API_SUCCESS', 'API_FAILURE', 'API_ERROR'];
 
 const isValidRequest = (action) => {
-  return typeof action === 'object' && action.hasOwnProperty(API_REQUEST);
+  return typeof action === 'object'
+    && action.hasOwnProperty(CALL_API);
 };
 
-const isValidResponse = (status) => {
-  return status === 200;
+const actionCallback = async (actionType, request, state, res, data, error) => {
+  let processedAction = {};
+
+  if (typeof actionType === 'object') {
+    let { payload, type, meta } = type;
+
+    if (payload) {
+      if (typeof payload === 'function') {
+        payload = await payload(request, state, res);
+      }
+    } else {
+      payload = data;
+    }
+
+    if (meta) {
+      if (typeof meta === 'function') {
+        meta = await meta(request, state, res);
+      }
+    } else {
+      meta = request.meta;
+    }
+
+    processedAction = {
+      payload,
+      type,
+      meta,
+      error
+    };
+  } else {
+    processedAction = {
+      payload: data,
+      type: actionType,
+      meta: request.meta,
+      error
+    }
+  }
+
+  return processedAction;
 };
 
 export const apiMiddleware = store => next => async (action) => {
@@ -20,36 +53,32 @@ export const apiMiddleware = store => next => async (action) => {
     return next(action);
   }
 
-  const request = action[API_REQUEST];
+  const request = action[CALL_API];
+  const state = store.getState();
+  const { method, headers, body, types, endpoint, meta } = request;
+  const [ successType, failureType, errorType ] = types || TYPES;
 
   try {
-    const response = await fetch(request.url, {
-      method: request.method ? request.method : "GET",
-      headers: request.header ? request.header : {},
-      body: request.body ? JSON.stringify(request.body) : undefined
+    const res = await fetch(endpoint, {
+      method: method || 'GET',
+      headers: headers || {},
+      body: body ? JSON.stringify(body) : undefined
     });
 
-    let data = await response.json();
+    const data = await res.json();
 
-    if (!isValidResponse(response.status)) {
-      return next({
-        type: request.action && request.action.failure ? request.action.failure : TYPE.failure,
-        payload: data,
-        error: true
-      });
+    if (res.status !== 200) {
+      return next(
+        await actionCallback(failureType, request, state, res, data, true)
+      );
     }
 
-    return next({
-      type: request.action && request.action.success ? request.action.success : TYPE.success,
-      payload: data,
-      meta: request.meta,
-      error: false
-    });
-  } catch (e) {
-    return next({
-      type: request.action && request.action.error ? request.action.error : TYPE.error,
-      payload: e,
-      error: true
-    });
+    return next(
+      await actionCallback(successType, request, state, res, data, false)
+    );
+  } catch (event) {
+    return next(
+      await actionCallback(errorType, request, state, event, event, true)
+    );
   }
 };

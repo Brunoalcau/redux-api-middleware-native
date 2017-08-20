@@ -12,7 +12,7 @@ npm install --save redux-api-middleware-native
 ```
 
 
-# Adding middleware to redux store
+# Adding the middleware to redux store
 ```js
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import apiMiddleware from 'redux-api-middleware-native';
@@ -26,16 +26,15 @@ const store = createStore(reducer, initialState, applyMiddleware(
 ));
 ```
 
-
-# Example
+# Usage 
 
 ```js
-import { API_REQUEST } from 'redux-api-middleware-native';
+import { CALL_API } from 'redux-api-middleware-native';
 
 function action() {
     return {
-            [API_REQUEST]: {
-                url: 'http://www.example.com/resource',
+            [CALL_API]: {
+                endpoint: 'http://www.example.com/resource',
                 method: "POST",
                 headers: {
                   'Content-Type': 'application/json'
@@ -44,14 +43,47 @@ function action() {
                     'username' : 'npm-user',
                     'password' : 'test'
                 },
-                action: {
-                        success: "SUCCESS",
-                        failure: "FAILURE",
-                        error: "ERROR"
-                },
+                types: ['SUCCESS', 'FAILURE', 'ERROR'],
                 meta: {
-                  id: 'to reducer'
-                }
+                    id: 'Data to reducer'
+                }
+            }
+    }
+}
+```
+
+# Custom payload / meta parser 
+
+```js
+import { CALL_API } from 'redux-api-middleware-native';
+
+function action() {
+    return {
+            [CALL_API]: {
+                endpoint: 'http://www.example.com/resource',
+                method: "POST",
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: {
+                    'username' : 'npm-user',
+                    'password' : 'test'
+                },
+                types: [{
+                  type: 'SUCCESS',
+                  payload: (action, state, res) => {
+                    return res.json().then((json) => {
+                      json.token = res.headers.get('Authorization'); // Inserting a header in response
+                      return json;
+                    });
+                  },
+                  meta: (action, state, res) => {
+                    return action.meta;
+                  }
+                }, 'FAILURE', 'ERROR'],
+                meta: {
+                    id: 'Data to reducer'
+                }
             }
     }
 }
@@ -60,36 +92,31 @@ function action() {
 # Action Types
 
 ## SUCCESS
-
-Type success means your request get HTTP status code 200 without any other errors.
-
 ```js
 Action {
-    type = action.success
+    type = types[0]
     payload = JSON parsed response
     error = false
 }
 ```
 
 ## FAILURE
-
 Type failure means your request not get HTTP status code 200 without any other errors.
 
 ```js
 Action {
-    type = action.failure
+    type = types[1]
     payload = JSON parsed response
     error = true
 }
 ```
 
 ## ERROR
-
 Type error means we got exception on some point of code (ex. response parsing).
 
 ```js
 Action {
-    type = action.error
+    type = types[2]
     payload = ERROR object
     error = true
 }

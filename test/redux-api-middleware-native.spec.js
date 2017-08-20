@@ -1,5 +1,9 @@
-import { API_REQUEST, apiMiddleware } from '../src/redux-api-middleware-native';
+import { CALL_API, apiMiddleware } from '../src/redux-api-middleware-native';
 
 it('Exports const', () => {
-  return expect(API_REQUEST).toEqual('API_REQUEST');
+  return expect(CALL_API).toEqual('API_REQUEST');
+});
+
+it('Exports middleware', () => {
+  return expect(typeof apiMiddleware).toEqual('function');
 });

@@ -110,7 +110,7 @@ var actionCallback = function () {
             processedAction = {};
 
             if (!((typeof actionType === 'undefined' ? 'undefined' : _typeof(actionType)) === 'object')) {
-              _context.next = 24;
+              _context.next = 27;
               break;
             }
 
@@ -133,41 +133,51 @@ var actionCallback = function () {
             payload = _context.sent;
 
           case 8:
-            _context.next = 13;
+            _context.next = 16;
             break;
 
           case 10:
             _context.next = 12;
-            return res.json();
+            return res;
 
           case 12:
-            payload = _context.sent;
+            _context.t0 = _context.sent;
 
-          case 13:
+            if (!_context.t0) {
+              _context.next = 15;
+              break;
+            }
+
+            _context.t0 = res.json();
+
+          case 15:
+            payload = _context.t0;
+
+          case 16:
             if (!meta) {
-              _context.next = 20;
+              _context.next = 23;
               break;
             }
 
             if (!(typeof meta === 'function')) {
-              _context.next = 18;
+              _context.next = 21;
               break;
             }
 
-            _context.next = 17;
+            _context.next = 20;
             return meta(request, state);
 
-          case 17:
+          case 20:
             meta = _context.sent;
 
-          case 18:
-            _context.next = 21;
+          case 21:
+            _context.next = 24;
             break;
 
-          case 20:
+          case 23:
             meta = request.meta;
 
-          case 21:
+          case 24:
 
             processedAction = {
               payload: payload,
@@ -175,29 +185,39 @@ var actionCallback = function () {
               meta: meta,
               error: error
             };
-            _context.next = 31;
+            _context.next = 37;
             break;
 
-          case 24:
-            _context.next = 26;
-            return res.json();
+          case 27:
+            _context.next = 29;
+            return res;
 
-          case 26:
-            _context.t0 = _context.sent;
-            _context.t1 = actionType;
-            _context.t2 = request.meta;
-            _context.t3 = error;
-            processedAction = {
-              payload: _context.t0,
-              type: _context.t1,
-              meta: _context.t2,
-              error: _context.t3
-            };
+          case 29:
+            _context.t1 = _context.sent;
 
-          case 31:
-            return _context.abrupt('return', processedAction);
+            if (!_context.t1) {
+              _context.next = 32;
+              break;
+            }
+
+            _context.t1 = res.json();
 
           case 32:
+            _context.t2 = _context.t1;
+            _context.t3 = actionType;
+            _context.t4 = request.meta;
+            _context.t5 = error;
+            processedAction = {
+              payload: _context.t2,
+              type: _context.t3,
+              meta: _context.t4,
+              error: _context.t5
+            };
+
+          case 37:
+            return _context.abrupt('return', processedAction);
+
+          case 38:
           case 'end':
             return _context.stop();
         }

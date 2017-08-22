@@ -19,7 +19,7 @@ const actionCallback = async (actionType, request, state, res, error) => {
         payload = await payload(request, state, res);
       }
     } else {
-      payload = await res && res.json();
+      payload = res ? await res.json() : res;
     }
 
     if (meta) {
@@ -37,8 +37,10 @@ const actionCallback = async (actionType, request, state, res, error) => {
       error
     };
   } else {
+    let payload = res ? await res.json() : res;
+
     processedAction = {
-      payload: await res && res.json(),
+      payload,
       type: actionType,
       meta: request.meta,
       error

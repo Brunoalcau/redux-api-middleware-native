@@ -1,7 +1,8 @@
 Redux api middleware native
 ====================
 [![Build Status](https://travis-ci.org/celso-henrique/redux-api-middleware-native.svg?branch=master)](https://travis-ci.org/celso-henrique/redux-api-middleware-native)
-[![Coverage Status](https://coveralls.io/repos/github/celso-henrique/redux-api-middleware-native/badge.svg?branch=master)](https://coveralls.io/github/celso-henrique/redux-api-middleware-native?branch=master)
+[![npm version](https://badge.fury.io/js/redux-api-middleware-native.svg)](https://badge.fury.io/js/redux-api-middleware-native)
+[![npm](https://img.shields.io/npm/dt/redux-api-middleware-native.svg)]()
 
 Api middleware for redux compatible with native and web apps.
 

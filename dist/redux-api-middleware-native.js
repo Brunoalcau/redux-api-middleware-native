@@ -94,7 +94,7 @@ __webpack_require__(1);
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 var CALL_API = exports.CALL_API = 'API_REQUEST';
-var TYPES = ['API_SUCCESS', 'API_FAILURE', 'API_ERROR'];
+var TYPES = ['SUCCESS', 'FAILURE', 'ERROR'];
 
 var isValidRequest = function isValidRequest(action) {
   return (typeof action === 'undefined' ? 'undefined' : _typeof(action)) === 'object' && action.hasOwnProperty(CALL_API);

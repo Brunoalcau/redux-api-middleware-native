@@ -1,7 +1,7 @@
 import 'whatwg-fetch';
 
 export const CALL_API = 'API_REQUEST';
-const TYPES = ['API_SUCCESS', 'API_FAILURE', 'API_ERROR'];
+const TYPES = ['SUCCESS', 'FAILURE', 'ERROR'];
 
 const isValidRequest = (action) => {
   return typeof action === 'object'

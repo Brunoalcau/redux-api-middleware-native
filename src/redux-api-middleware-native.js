@@ -1,6 +1,4 @@
-if (process.env.IS_BROWSER) {
-  require('whatwg-fetch');
-}
+import 'whatwg-fetch';
 
 export const CALL_API = 'API_REQUEST';
 const TYPES = ['SUCCESS', 'FAILURE', 'ERROR'];

@@ -1,18 +1,19 @@
-import 'whatwg-fetch';
+if (process.env.IS_BROWSER) {
+  require('whatwg-fetch');
+}
 
 export const CALL_API = 'API_REQUEST';
 const TYPES = ['SUCCESS', 'FAILURE', 'ERROR'];
 
-const isValidRequest = (action) => {
-  return typeof action === 'object'
-    && action.hasOwnProperty(CALL_API);
+const isValidRequest = action => {
+  return typeof action === 'object' && action.hasOwnProperty(CALL_API);
 };
 
 const actionCallback = async (actionType, request, state, res, error) => {
   let processedAction = {};
 
   if (typeof actionType === 'object') {
-    let { payload, type, meta } = actionType;
+    let {payload, type, meta} = actionType;
 
     if (payload) {
       if (typeof payload === 'function') {
@@ -24,7 +25,7 @@ const actionCallback = async (actionType, request, state, res, error) => {
 
     if (meta) {
       if (typeof meta === 'function') {
-        meta =  await meta(request, state);
+        meta = await meta(request, state);
       }
     } else {
       meta = request.meta;
@@ -50,15 +51,15 @@ const actionCallback = async (actionType, request, state, res, error) => {
   return processedAction;
 };
 
-export const apiMiddleware = store => next => async (action) => {
+export const apiMiddleware = store => next => async action => {
   if (!isValidRequest(action)) {
     return next(action);
   }
 
   const request = action[CALL_API];
   const state = store.getState();
-  const { method, headers, body, types, endpoint, meta } = request;
-  const [ successType, failureType, errorType ] = types || TYPES;
+  const {method, headers, body, types, endpoint, meta} = request;
+  const [successType, failureType, errorType] = types || TYPES;
 
   try {
     const res = await fetch(endpoint, {
@@ -68,17 +69,11 @@ export const apiMiddleware = store => next => async (action) => {
     });
 
     if (res.status !== 200) {
-      return next(
-        await actionCallback(failureType, request, state, res, true)
-      );
+      return next(await actionCallback(failureType, request, state, res, true));
     }
 
-    return next(
-      await actionCallback(successType, request, state, res, false)
-    );
+    return next(await actionCallback(successType, request, state, res, false));
   } catch (event) {
-    return next(
-      await actionCallback(errorType, request, state, event, true)
-    );
+    return next(await actionCallback(errorType, request, state, event, true));
   }
 };
